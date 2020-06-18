@@ -33,7 +33,7 @@ HHE ='04:30:00'																		#
 WS, WD, T, RH, dayPlusTime = readPWIDS(location,Npwids,DOYS,DOYE,HHS,HHE)			#
 #####################################################################################
 
-# Possible cases: histograms, boxplots
+# Possible cases: histograms, frequency_polygons, boxplots, boxplots_advanced
 plot_type = 'boxplots'
 fs = 14
 
@@ -52,6 +52,7 @@ if plot_type == 'histograms':
 		plt.show()
 
 elif plot_type == 'frequency_polygons':
+		## Code to modify for FREQUENCY_POLYGONS PART!
 		fig = plt.figure(figsize=(21,6))
 		ax1 = fig.add_subplot(131)
 		ax2 = fig.add_subplot(132)
@@ -84,8 +85,8 @@ elif plot_type == 'boxplots':
 		ax2.set_ylabel('Wind Direction [$^{\circ}$]',fontsize=fs)
 		ax2.tick_params(labelsize=fs)
 		plt.show()
-elif plot_type == 'boxplots_advance':
-		## Code to modify for ADVANCE BOXPLOTS PART!
+elif plot_type == 'boxplots_advanced':
+		## Code to modify for ADVANCED BOXPLOTS PART!
 		sns.set()
 		WS = np.array([WS])
 		WD = np.array([WD])
