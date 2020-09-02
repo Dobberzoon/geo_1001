@@ -23,7 +23,7 @@
 import numpy as np
 from readPWIDS import readPWIDS
 import matplotlib.pyplot as plt
-location = '/Users/claragarciasan/Documents/TUD/Classes/GEO1001/Scripts/data/'
+location = 'data/'
 Npwids = np.array([15])
 Period = 'IOP9'
 if Period in'IOP9':

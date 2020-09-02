@@ -25,7 +25,7 @@ from readPWIDS import readPWIDS
 import matplotlib.pyplot as plt
 import matplotlib.ticker
 from matplotlib.cm import get_cmap
-location = '/Users/claragarciasan/Documents/TUD/Research/OklahomaURANS/PWIDS'
+location = 'data/'
 Npwids = np.array([15])
 Period = 'IOP9'
 if Period in'IOP9':
@@ -43,6 +43,13 @@ elif Period in '23h':
 else:
     print('Period targeted not considered')
 WS, WD, T, RH, dayPlusTime = readPWIDS(location,Npwids,DOYS,DOYE,HHS,HHE)
+print('Mean WS = ' + str(WS.mean()))
+print('Std WS = ' + str(WS.std()))
+print('Var WS = ' + str(WS.var()))
+print('Mean WD = ' + str(WD.mean()))
+print('Std WD = ' + str(WD.std()))
+print('Var WD = ' + str(WD.var()))
+
 # measurement sampling frequency
 # fs = 10
 # fig = plt.figure(figsize=(8,6))
@@ -58,10 +65,10 @@ WS, WD, T, RH, dayPlusTime = readPWIDS(location,Npwids,DOYS,DOYE,HHS,HHE)
 # ax2.set_xlabel('Time [min]',fontsize=14)
 # plt.show()
 
-fig = plt.figure(figsize=(8,6))
-n, bins, patches = plt.hist(x=WS, bins=11, color='b',alpha=0.7, rwidth=0.85)
-plt.xlabel('Wind speed [m/s]',fontsize=15)
-plt.ylabel('Frequency',fontsize=15)
-plt.xticks(fontsize=15)
-plt.yticks(fontsize=15)
-plt.show()
+# fig = plt.figure(figsize=(8,6))
+# n, bins, patches = plt.hist(x=WS, bins=11, color='b',alpha=0.7, rwidth=0.85)
+# plt.xlabel('Wind speed [m/s]',fontsize=15)
+# plt.ylabel('Frequency',fontsize=15)
+# plt.xticks(fontsize=15)
+# plt.yticks(fontsize=15)
+# plt.show()
