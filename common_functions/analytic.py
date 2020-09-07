@@ -37,7 +37,7 @@ def MakeExpoCdf():
                    ylabel='CDF')
 
     
-def ReadBabyBoom(filename='data/babyboom.dat'):
+def ReadBabyBoom(filename='../data/babyboom.dat'):
     """Reads the babyboom data.
 
     filename: string
