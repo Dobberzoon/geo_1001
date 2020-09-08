@@ -3,7 +3,7 @@
 ################################# DO NOT CHANGE #####################################
 import sys
 # insert at 1, 0 is the script path (or '' in REPL)
-sys.path.insert(1, '/Users/claragarciasan/Documents/TUD/Classes/GEO1001/geo1001.2020/common_functions/')
+sys.path.insert(1, '../common_functions/')
 import numpy as np																	#
 import matplotlib.pyplot as plt														#
 import pandas as pd																	#
