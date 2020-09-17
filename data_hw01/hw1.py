@@ -8,8 +8,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #Means, of each variable in 'HEAT - A_final.xls'
-df = pd.read_excel('HEAT - A_final.xls', skiprows=[0,1,2,4])
-df.apply(np.mean).to_csv('Means_A_.csv')
+df_A = pd.read_excel('HEAT - A_final.xls', skiprows=[0,1,2,4])
+df_B = pd.read_excel('HEAT - B_final.xls', skiprows=[0,1,2,4])
+df_C = pd.read_excel('HEAT - C_final.xls', skiprows=[0,1,2,4])
+df_D = pd.read_excel('HEAT - D_final.xls', skiprows=[0,1,2,4])
+df_E = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
+
+#df_mean_concat = pd.concat([df_A.apply(np.mean), df_B.apply(np.mean), df_C.apply(np.mean), df_D.apply(np.mean), df_E.apply(np.mean)], axis=1, ignore_index=True)
+#df_mean_concat.to_csv('Means_ALL2.csv')
+#df_mean_concat.to_excel('Means_excel.xlsx')
+#print(df_mean_concat)
+
+print(df_A.apply(np.var))
+
+#df_mean_ALL = pd.merge((df_A.apply(np.mean), df_B.apply(np.mean), df_C.apply(np.mean), df_D.apply(np.mean), df_E.apply(np.mean)))
+
+
+#df_mean_ALL.to_csv('Means_ALL2.csv')
+
+#df_A.apply(np.mean).to_csv('Means_A_.csv')
 
 '''
 print('Means of each variable in "HEAT - A_final.xls"')
