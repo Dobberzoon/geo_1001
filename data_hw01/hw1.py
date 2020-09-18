@@ -2,22 +2,47 @@
 
 #Author: Daniel Dobson
 #Student number: 5152739
-
+#%%
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
 #Dataframes of all variables from 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 dfA = pd.read_excel('HEAT - A_final.xls', skiprows=[0,1,2,4])
-#dfB = pd.read_excel('HEAT - B_final.xls', skiprows=[0,1,2,4])
-#dfC = pd.read_excel('HEAT - C_final.xls', skiprows=[0,1,2,4])
-#dfD = pd.read_excel('HEAT - D_final.xls', skiprows=[0,1,2,4])
-#dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
+dfB = pd.read_excel('HEAT - B_final.xls', skiprows=[0,1,2,4])
+dfC = pd.read_excel('HEAT - C_final.xls', skiprows=[0,1,2,4])
+dfD = pd.read_excel('HEAT - D_final.xls', skiprows=[0,1,2,4])
+dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 
-dfA_Temp = dfA[['Temperature']]
+dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
 
-dfA_Temp.plt.hist(bins=5)
+
+#concat_dfs('Temperature')
+#print(dfA.head)
+print(dfs.head)
+#print(dfs.colums)
+
+#print(dfs['Temperature'].head)
+
+
+dfs.hist(column='Temperature', bins=5)
+plt.title('Temperatures of sensors')
+plt.xlabel('Temp in C')
+plt.ylabel('Frequency')
+plt.savefig('Temps_bin5.png')
 plt.show()
+
+dfs.hist(column='Temperature', bins=50)
+plt.title('Temperatures of sensors')
+plt.xlabel('Temp in C')
+plt.ylabel('Frequency')
+plt.savefig('Temps_bin50.png')
+plt.show()
+
+#dfA_Temp = dfA[['Temperature']]
+#plt.show()
 
 #print(dfA_Temp.head)
 #print(dfA_Temp.columns)
@@ -86,3 +111,4 @@ plt.show()
 #Get quick initial idea of basic stats
 #dfA.describe()
 ''' 
+# %%
