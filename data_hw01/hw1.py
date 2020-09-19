@@ -15,18 +15,67 @@ dfB = pd.read_excel('HEAT - B_final.xls', skiprows=[0,1,2,4])
 dfC = pd.read_excel('HEAT - C_final.xls', skiprows=[0,1,2,4])
 dfD = pd.read_excel('HEAT - D_final.xls', skiprows=[0,1,2,4])
 dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
-
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
+
+def Pmf(pmf, **options):
+    """Plots a Pmf or Hist as a line.
+
+    Args:
+      pmf: Hist or Pmf object
+      options: keyword args passed to plt.plot
+    """
+    xs, ys = pmf.Render()
+    low, high = min(xs), max(xs)
+
+    width = options.pop('width', None)
+    if width is None:
+        try:
+            width = np.diff(xs).min()
+        except TypeError:
+            warnings.warn("Pmf: Can't compute bar width automatically."
+                          "Check for non-numeric types in Pmf."
+                          "Or try providing width option.")
+    points = []
+
+    lastx = np.nan
+    lasty = 0
+    for x, y in zip(xs, ys):
+        if (x - lastx) > 1e-5:
+            points.append((lastx, 0))
+            points.append((x, 0))
+
+        points.append((x, lasty))
+        points.append((x, y))
+        points.append((x+width, y))
+
+        lastx = x + width
+        lasty = y
+    points.append((lastx, 0))
+    pxs, pys = zip(*points)
+
+    align = options.pop('align', 'center')
+    if align == 'center':
+        pxs = np.array(pxs) - width/2.0
+    if align == 'right':
+        pxs = np.array(pxs) - width
+
+    options = _Underride(options, label=pmf.label)
+    Plot(pxs, pys, **options)
+
+dfA_hist = dfA.hist(column='Temperature', histtype= 'step',  bins=50)
+
+Pmf(dfA_hist)
+plt.show()
 
 
 #concat_dfs('Temperature')
 #print(dfA.head)
-print(dfs.head)
+#print(dfs.head)
 #print(dfs.colums)
 
 #print(dfs['Temperature'].head)
 
-
+'''
 dfs.hist(column='Temperature', bins=5)
 plt.title('Temperatures of sensors')
 plt.xlabel('Temp in C')
@@ -40,7 +89,7 @@ plt.xlabel('Temp in C')
 plt.ylabel('Frequency')
 plt.savefig('Temps_bin50.png')
 plt.show()
-
+'''
 #dfA_Temp = dfA[['Temperature']]
 #plt.show()
 
