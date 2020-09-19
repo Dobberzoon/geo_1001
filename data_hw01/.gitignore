@@ -5,13 +5,10 @@ Means_excel.xlsx
 Temps.png
 TempsA.png
 TempsB.png
-Temps_bin5.png
-Temps_bin50.png
 colors.py
 colors.py:Zone.Identifier
 dfs.xlsx
 .ipynb_checkpoints/
 .vscode/
 Frequency_Polygon.png
-Frequency_Polygon_Temperatures_A-E.png
 ../lectureA1/__pycache__/readPWIDS.cpython-38.pyc
