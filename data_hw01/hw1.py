@@ -6,6 +6,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import seaborn as sns
 from scipy import stats
 
@@ -18,26 +19,56 @@ dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
 
 
-# Sample from a normal distribution using numpy's random number generator
-
-
-# Compute a histogram of the sample
-
-histogram, bins = plt.hist(dfs['Temperature'], bins=50, density=True)
-bin_centers = 0.5*(bins[1:] + bins[:-1])
-
-# Compute the PDF on the bin centers from scipy distribution object
-pdf = stats.norm.pdf(bin_centers)
-
-plt.figure(figsize=(6, 4))
-#plt.plot(bin_centers, histogram, label="Histogram of Temperatures")
-plt.plot(bin_centers, pdf, label="PDF")
+#PDF and KDE of measured Windspeed values from sensors A - E
+y,edges_WSPDF,_=plt.hist(dfs['Wind Speed'], bins=30, histtype= 'step', edgecolor='w', density=True)
+midpoints_WSPDF=0.5*(edges_WSPDF[1:]+edges_WSPDF[:-1])
+plt.plot(midpoints_WSPDF, y, 'b', label='PDF Wind Speed')
+sns.kdeplot(dfs['Wind Speed'], color='#ff7f0e')
+plt.ylabel('Probability')
+plt.xlabel('Windspeed in m/s')
+plt.title('PDF & KDE Wind Speed Sensors A - E')
 plt.legend()
+plt.savefig('PDF_KDE_WindSpeed_A-E.png')
+plt.show()
+
+
+#%%
+'''
+f, (ax1, ax2) = plt.subplots(2)
+sns.kdeplot(dfs['Wind Speed'], ax=ax1)
+sns.kdeplot(x, ax=ax2)
+
+
+
+y,edges_A,_=plt.hist(dfA['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_B,_=plt.hist(dfB['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_C,_=plt.hist(dfC['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_D,_=plt.hist(dfD['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_E,_=plt.hist(dfE['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+midpoints_A=0.5*(edges_A[1:]+edges_A[:-1])
+midpoints_B=0.5*(edges_B[1:]+edges_B[:-1])
+midpoints_C=0.5*(edges_C[1:]+edges_C[:-1])
+midpoints_D=0.5*(edges_D[1:]+edges_D[:-1])
+midpoints_E=0.5*(edges_E[1:]+edges_E[:-1])
+plt.plot(midpoints_A, y, 'r-*', label='A')
+plt.plot(midpoints_B, y, 'b-*', label='B')
+plt.plot(midpoints_C, y, 'g-*', label='C')
+plt.plot(midpoints_D, y, 'c-*', label='D')
+plt.plot(midpoints_E, y, 'm-*', label='E')
+plt.title('Temperatures of sensors A - E')
+plt.xlabel('Temp in C')
+plt.ylabel('Frequency')
+plt.legend()
+plt.savefig('Frequency_Polygon_Temperatures_A-E.png')
+plt.show()
+#KDE of measured Windspeed values from sensors A - E
+sns.kdeplot(dfs['Temperature'])
+plt.title('PDF Temperature Values')
+plt.savefig('PDF_Temp.png')
 plt.show()
 
 
 
-'''
 pmf = dfA['Temperature'].value_counts().sort_index() / len(dfA['Temperature'])
 pmf.plot(kind='bar')
 
@@ -188,13 +219,19 @@ plt.plot()
 plt.ylabel('Probability')
 plt.xlabel('Temp in C')
 plt.title('PMF Temperatures Sensors A - E')
-plt.savefig('PMF.png')
+plt.savefig('PMF_Temps.png')
 plt.show()
 
-#PDF of measured Temperature values from all sensors
-sns.kdeplot(dfs['Temperature'])
-plt.title('PDF Temperature Values')
-plt.savefig('PDF_Temp.png')
+#Plot PDF Temperatures all sensors
+y,edges_T,_=plt.hist(dfs['Temperature'], bins=50, histtype= 'step', edgecolor='w', density=True)
+dfs['Temperature']
+midpoints_T=0.5*(edges_T[1:]+edges_T[:-1])
+plt.plot(midpoints_T, y, 'b', label='PDF_Temps')
+plt.plot()
+plt.ylabel('Probability')
+plt.xlabel('Temp in C')
+plt.title('PDF Temperatures Sensors A - E')
+plt.savefig('PDF_Temperatures_A-E.png')
 plt.show()
 
 #CDF Temperature values
@@ -205,6 +242,12 @@ plt.ylabel('Cumulative Density')
 plt.xlabel('Temp in C')
 plt.title('CDF Temperatures Sensors A - E')
 plt.savefig('CDF.png')
+plt.show()
+
+#KDE of measured Windspeed values from sensors A - E
+sns.kdeplot(dfs['Temperature'])
+plt.title('PDF Temperature Values')
+plt.savefig('PDF_Temp.png')
 plt.show()
 '''
 #print(dfs.describe())
