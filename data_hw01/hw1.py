@@ -19,39 +19,25 @@ dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
 
 
+#Correlation matrices Temperature
+dfs_Temp = pd.concat([dfA['WBGT'], dfB['WBGT'], dfC['WBGT'], dfD['WBGT'], dfE['WBGT']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_Temp_P = dfs_Temp.corr(method='pearson')
+#dfs_Temp_P.to_excel('dfs_WBGT.xlsx')
+dfs_Temp_S = dfs_Temp.corr(method='spearman')
+#dfs_Temp_S.to_excel('dfs_WBGT_S.xlsx')
+plt.matshow(dfs_Temp.corr(method='pearson'))
+plt.show()
 #%%
-#Boxplots for Wind Speed, Wind Direction and Temperature
-boxplot_windspeed = [dfA['Wind Speed'], dfB['Wind Speed'], dfC['Wind Speed'], dfD['Wind Speed'], dfE['Wind Speed']]
-fig1, ax1 = plt.subplots()
-ax1.set_title('Distribution of measured Wind Speed values')
-plt.xlabel('Sensor')
-plt.ylabel('Windpeed in m/s')
-ax1.boxplot(boxplot_windspeed, labels=['A','B','C','D','E'])
-plt.savefig('Boxplot_Windspeed.png')
 
-#%%
-boxplot_direction = [dfA['Direction ‚ True'], dfB['Direction ‚ True'], dfC['Direction ‚ True'], dfD['Direction ‚ True'], dfE['Direction ‚ True']]
-fig1, ax1 = plt.subplots()
-ax1.set_title('Distribution of measured Direction, True values')
-plt.xlabel('Sensor')
-plt.ylabel('Direction in degrees')
-ax1.boxplot(boxplot_direction, labels=['A','B','C','D','E'])
-plt.savefig('Boxplot_DirectionTrue.png')
-
-
-#%%
-boxplot_temp = [dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']]
-fig1, ax1 = plt.subplots()
-ax1.set_title('Distribution of measured Temperature values')
-plt.xlabel('Sensor')
-plt.ylabel('Temperature in C')
-ax1.boxplot(boxplot_temp, labels=['A','B','C','D','E'])
-plt.savefig('Boxplot_Temp.png')
+#Correlation matrices Temperature
+dfs_Temp = pd.concat([dfA['Crosswind Speed'], dfB['Crosswind Speed'], dfC['Crosswind Speed'], dfD['Crosswind Speed'], dfE['Crosswind Speed']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_Temp_P = dfs_Temp.corr(method='pearson')
+#dfs_Temp_P.to_excel('dfs_CWS_P.xlsx')
+dfs_Temp_S = dfs_Temp.corr(method='spearman')
+#dfs_Temp_S.to_excel('dfs_CWS_S.xlsx')
 
 
 '''
-#%%
-
 #Means, of each variable in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 df_mean_concat = pd.concat([dfA.apply(np.mean), dfB.apply(np.mean), dfC.apply(np.mean), dfD.apply(np.mean), dfE.apply(np.mean)], axis=1, ignore_index=True)
 df_mean_concat.to_csv('Means_ALL2.csv')
@@ -236,4 +222,10 @@ plt.legend()
 plt.savefig('PDF_KDE_WindSpeed_A-E.png')
 plt.show()
 
+#Correlation matrices Temperature
+dfs_Temp = pd.concat([dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_Temp_P = dfs_Temp.corr(method='pearson')
+dfs_Temp_P.to_excel('dfs_Temp_P.xlsx')
+dfs_Temp_S = dfs_Temp.corr(method='spearman')
+dfs_Temp_S.to_excel('dfs_Temp_S.xlsx')
 '''
