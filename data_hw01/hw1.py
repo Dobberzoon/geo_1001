@@ -18,12 +18,40 @@ dfD = pd.read_excel('HEAT - D_final.xls', skiprows=[0,1,2,4])
 dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
 
-dfs['Wind Speed'].to_excel('dfs_windspeed.xlsx')
 
+#%%
+#Boxplots for Wind Speed, Wind Direction and Temperature
+boxplot_windspeed = [dfA['Wind Speed'], dfB['Wind Speed'], dfC['Wind Speed'], dfD['Wind Speed'], dfE['Wind Speed']]
+fig1, ax1 = plt.subplots()
+ax1.set_title('Distribution of measured Wind Speed values')
+plt.xlabel('Sensor')
+plt.ylabel('Windpeed in m/s')
+ax1.boxplot(boxplot_windspeed, labels=['A','B','C','D','E'])
+plt.savefig('Boxplot_Windspeed.png')
+
+#%%
+boxplot_direction = [dfA['Direction ‚ True'], dfB['Direction ‚ True'], dfC['Direction ‚ True'], dfD['Direction ‚ True'], dfE['Direction ‚ True']]
+fig1, ax1 = plt.subplots()
+ax1.set_title('Distribution of measured Direction, True values')
+plt.xlabel('Sensor')
+plt.ylabel('Direction in degrees')
+ax1.boxplot(boxplot_direction, labels=['A','B','C','D','E'])
+plt.savefig('Boxplot_DirectionTrue.png')
 
 
 #%%
+boxplot_temp = [dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']]
+fig1, ax1 = plt.subplots()
+ax1.set_title('Distribution of measured Temperature values')
+plt.xlabel('Sensor')
+plt.ylabel('Temperature in C')
+ax1.boxplot(boxplot_temp, labels=['A','B','C','D','E'])
+plt.savefig('Boxplot_Temp.png')
+
+
 '''
+#%%
+
 #Means, of each variable in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 df_mean_concat = pd.concat([dfA.apply(np.mean), dfB.apply(np.mean), dfC.apply(np.mean), dfD.apply(np.mean), dfE.apply(np.mean)], axis=1, ignore_index=True)
 df_mean_concat.to_csv('Means_ALL2.csv')
@@ -133,34 +161,36 @@ plt.legend()
 plt.savefig('Frequency_Polygon_Temperatures_A-E.png')
 plt.show()
 
+#%%
 #Boxplots for Wind Speed, Wind Direction and Temperature
 boxplot_windspeed = [dfA['Wind Speed'], dfB['Wind Speed'], dfC['Wind Speed'], dfD['Wind Speed'], dfE['Wind Speed']]
-plt.figure()
-plt.boxplot(boxplot_windspeed, labels=['A', 'B','C', 'D', 'E'])
-plt.title('Distribution of measured Wind Speed values')
+fig1, ax1 = plt.subplots()
+ax1.set_title('Distribution of measured Wind Speed values')
 plt.xlabel('Sensor')
 plt.ylabel('Windpeed in m/s')
+ax1.boxplot(boxplot_windspeed, labels=['A','B','C','D','E'])
 plt.savefig('Boxplot_Windspeed.png')
-plt.show()
 
+#%%
 boxplot_direction = [dfA['Direction ‚ True'], dfB['Direction ‚ True'], dfC['Direction ‚ True'], dfD['Direction ‚ True'], dfE['Direction ‚ True']]
-plt.figure()
-plt.boxplot(boxplot_windspeed, labels=['A', 'B','C', 'D', 'E'])
-plt.title('Distribution of measured Direction, True values')
+fig1, ax1 = plt.subplots()
+ax1.set_title('Distribution of measured Direction, True values')
 plt.xlabel('Sensor')
 plt.ylabel('Direction in degrees')
+ax1.boxplot(boxplot_direction, labels=['A','B','C','D','E'])
 plt.savefig('Boxplot_DirectionTrue.png')
-plt.show()
 
+
+#%%
 boxplot_temp = [dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']]
-plt.figure()
-plt.boxplot(boxplot_windspeed, labels=['A', 'B','C', 'D', 'E'])
-plt.title('Distribution of measured Temperature values')
+fig1, ax1 = plt.subplots()
+ax1.set_title('Distribution of measured Temperature values')
 plt.xlabel('Sensor')
 plt.ylabel('Temperature in C')
+ax1.boxplot(boxplot_temp, labels=['A','B','C','D','E'])
 plt.savefig('Boxplot_Temp.png')
-plt.show()
 
+#%%
 ##A2
 #Plot PMF Temperatures all sensors
 plt.hist(dfs['Temperature'], bins=50, histtype= 'step', edgecolor='k', density=True)
@@ -205,37 +235,5 @@ plt.title('PDF & KDE Wind Speed Sensors A - E')
 plt.legend()
 plt.savefig('PDF_KDE_WindSpeed_A-E.png')
 plt.show()
+
 '''
-#print(dfs.describe())
-
-#concat_dfs('Temperature')
-#print(dfA.head)
-#print(dfs.head)
-#print(dfs.colums)
-
-#print(dfs['Temperature'].head)
-
-
-
-
-#dfA_Temp = dfA[['Temperature']]
-#plt.show()
-
-#print(dfA_Temp.head)
-#print(dfA_Temp.columns)
-
-
-
-
-
-#Prints for initial look into data
-#print(df.head)
-#print(df.columns)
-#print(df.mean)
-
-#Get quick initial idea of basic stats
-#dfA.describe()
-
-# %%
-
-# %%
