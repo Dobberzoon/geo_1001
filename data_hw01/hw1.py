@@ -6,7 +6,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+import seaborn as sns
+from scipy import stats
 
 #Dataframes of all variables from 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 dfA = pd.read_excel('HEAT - A_final.xls', skiprows=[0,1,2,4])
@@ -17,64 +18,31 @@ dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
 
 
-#Histogram of temperatures for sensors A -E, bin=5
-dfs.hist(column='Temperature', bins=5)
-plt.title('Temperatures of sensors')
-plt.xlabel('Temp in C')
-plt.ylabel('Frequency')
-plt.savefig('Temps_bin5.png')
-plt.show()
+# Sample from a normal distribution using numpy's random number generator
 
-#Histogram of temperatures for sensors A -E, bin=5
-dfs.hist(column='Temperature', bins=50)
-plt.title('Temperatures of sensors')
-plt.xlabel('Temp in C')
-plt.ylabel('Frequency')
-plt.savefig('Temps_bin50.png')
-plt.show()
 
-#Frequency Polygon of Temperature of sensors A -E
-y,edges_A,_=plt.hist(dfA['Temperature'], bins=50, histtype= 'step', edgecolor='w')
-y,edges_B,_=plt.hist(dfB['Temperature'], bins=50, histtype= 'step', edgecolor='w')
-y,edges_C,_=plt.hist(dfC['Temperature'], bins=50, histtype= 'step', edgecolor='w')
-y,edges_D,_=plt.hist(dfD['Temperature'], bins=50, histtype= 'step', edgecolor='w')
-y,edges_E,_=plt.hist(dfE['Temperature'], bins=50, histtype= 'step', edgecolor='w')
-midpoints_A=0.5*(edges_A[1:]+edges_A[:-1])
-midpoints_B=0.5*(edges_B[1:]+edges_B[:-1])
-midpoints_C=0.5*(edges_C[1:]+edges_C[:-1])
-midpoints_D=0.5*(edges_D[1:]+edges_D[:-1])
-midpoints_E=0.5*(edges_E[1:]+edges_E[:-1])
-plt.plot(midpoints_A, y, 'r-*', label='A')
-plt.plot(midpoints_B, y, 'b-*', label='B')
-plt.plot(midpoints_C, y, 'g-*', label='C')
-plt.plot(midpoints_D, y, 'c-*', label='D')
-plt.plot(midpoints_E, y, 'm-*', label='E')
-plt.title('Temperatures of sensors A - E')
-plt.xlabel('Temp in C')
-plt.ylabel('Frequency')
+# Compute a histogram of the sample
+
+histogram, bins = plt.hist(dfs['Temperature'], bins=50, density=True)
+bin_centers = 0.5*(bins[1:] + bins[:-1])
+
+# Compute the PDF on the bin centers from scipy distribution object
+pdf = stats.norm.pdf(bin_centers)
+
+plt.figure(figsize=(6, 4))
+#plt.plot(bin_centers, histogram, label="Histogram of Temperatures")
+plt.plot(bin_centers, pdf, label="PDF")
 plt.legend()
-plt.savefig('Frequency_Polygon_Temperatures_A-E.png')
 plt.show()
 
-#print(dfs.describe())
 
-#concat_dfs('Temperature')
-#print(dfA.head)
-#print(dfs.head)
-#print(dfs.colums)
-
-#print(dfs['Temperature'].head)
-
-
-
-
-#dfA_Temp = dfA[['Temperature']]
-#plt.show()
-
-#print(dfA_Temp.head)
-#print(dfA_Temp.columns)
 
 '''
+pmf = dfA['Temperature'].value_counts().sort_index() / len(dfA['Temperature'])
+pmf.plot(kind='bar')
+
+
+
 #Means, of each variable in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 df_mean_concat = pd.concat([dfA.apply(np.mean), dfB.apply(np.mean), dfC.apply(np.mean), dfD.apply(np.mean), dfE.apply(np.mean)], axis=1, ignore_index=True)
 df_mean_concat.to_csv('Means_ALL2.csv')
@@ -144,7 +112,122 @@ plt.show()
 #Export basic stats to excel
 #df_mean_std_var.to_excel('Basic_stats_excel_V1.xlsx')
 #df_mean_std_var_2.to_excel('Basic_stats_excel_V2.xlsx')
+
+#Histogram of temperatures for sensors A -E, bin=5
+dfs.hist(column='Temperature', bins=5)
+plt.title('Temperatures of sensors')
+plt.xlabel('Temp in C')
+plt.ylabel('Frequency')
+plt.savefig('Temps_bin5.png')
+plt.show()
+
+#Histogram of temperatures for sensors A -E, bin=5
+dfs.hist(column='Temperature', bins=50)
+plt.title('Temperatures of sensors')
+plt.xlabel('Temp in C')
+plt.ylabel('Frequency')
+plt.savefig('Temps_bin50.png')
+plt.show()
+
+#Frequency Polygon of Temperature of sensors A -E
+y,edges_A,_=plt.hist(dfA['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_B,_=plt.hist(dfB['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_C,_=plt.hist(dfC['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_D,_=plt.hist(dfD['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+y,edges_E,_=plt.hist(dfE['Temperature'], bins=50, histtype= 'step', edgecolor='w')
+midpoints_A=0.5*(edges_A[1:]+edges_A[:-1])
+midpoints_B=0.5*(edges_B[1:]+edges_B[:-1])
+midpoints_C=0.5*(edges_C[1:]+edges_C[:-1])
+midpoints_D=0.5*(edges_D[1:]+edges_D[:-1])
+midpoints_E=0.5*(edges_E[1:]+edges_E[:-1])
+plt.plot(midpoints_A, y, 'r-*', label='A')
+plt.plot(midpoints_B, y, 'b-*', label='B')
+plt.plot(midpoints_C, y, 'g-*', label='C')
+plt.plot(midpoints_D, y, 'c-*', label='D')
+plt.plot(midpoints_E, y, 'm-*', label='E')
+plt.title('Temperatures of sensors A - E')
+plt.xlabel('Temp in C')
+plt.ylabel('Frequency')
+plt.legend()
+plt.savefig('Frequency_Polygon_Temperatures_A-E.png')
+plt.show()
+
+#Boxplots for Wind Speed, Wind Direction and Temperature
+boxplot_windspeed = [dfA['Wind Speed'], dfB['Wind Speed'], dfC['Wind Speed'], dfD['Wind Speed'], dfE['Wind Speed']]
+plt.figure()
+plt.boxplot(boxplot_windspeed, labels=['A', 'B','C', 'D', 'E'])
+plt.title('Distribution of measured Wind Speed values')
+plt.xlabel('Sensor')
+plt.ylabel('Windpeed in m/s')
+plt.savefig('Boxplot_Windspeed.png')
+plt.show()
+
+boxplot_direction = [dfA['Direction ‚ True'], dfB['Direction ‚ True'], dfC['Direction ‚ True'], dfD['Direction ‚ True'], dfE['Direction ‚ True']]
+plt.figure()
+plt.boxplot(boxplot_windspeed, labels=['A', 'B','C', 'D', 'E'])
+plt.title('Distribution of measured Direction, True values')
+plt.xlabel('Sensor')
+plt.ylabel('Direction in degrees')
+plt.savefig('Boxplot_DirectionTrue.png')
+plt.show()
+
+boxplot_temp = [dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']]
+plt.figure()
+plt.boxplot(boxplot_windspeed, labels=['A', 'B','C', 'D', 'E'])
+plt.title('Distribution of measured Temperature values')
+plt.xlabel('Sensor')
+plt.ylabel('Temperature in C')
+plt.savefig('Boxplot_Temp.png')
+plt.show()
+
+##A2
+#Plot PMF Temperatures all sensors
+plt.hist(dfs['Temperature'], bins=50, histtype= 'step', edgecolor='k', density=True)
+dfs['Temperature']
+plt.plot()
+plt.ylabel('Probability')
+plt.xlabel('Temp in C')
+plt.title('PMF Temperatures Sensors A - E')
+plt.savefig('PMF.png')
+plt.show()
+
+#PDF of measured Temperature values from all sensors
+sns.kdeplot(dfs['Temperature'])
+plt.title('PDF Temperature Values')
+plt.savefig('PDF_Temp.png')
+plt.show()
+
+#CDF Temperature values
+plt.hist(dfs['Temperature'], bins=50, histtype= 'step', edgecolor='k', density=True, cumulative=True)
+dfs['Temperature']
+plt.plot()
+plt.ylabel('Cumulative Density')
+plt.xlabel('Temp in C')
+plt.title('CDF Temperatures Sensors A - E')
+plt.savefig('CDF.png')
+plt.show()
 '''
+#print(dfs.describe())
+
+#concat_dfs('Temperature')
+#print(dfA.head)
+#print(dfs.head)
+#print(dfs.colums)
+
+#print(dfs['Temperature'].head)
+
+
+
+
+#dfA_Temp = dfA[['Temperature']]
+#plt.show()
+
+#print(dfA_Temp.head)
+#print(dfA_Temp.columns)
+
+
+
+
 
 #Prints for initial look into data
 #print(df.head)
@@ -154,55 +237,6 @@ plt.show()
 #Get quick initial idea of basic stats
 #dfA.describe()
 
-'''
-def Pmf(pmf, **options):
-    """Plots a Pmf or Hist as a line.
+# %%
 
-    Args:
-      pmf: Hist or Pmf object
-      options: keyword args passed to plt.plot
-    """
-    xs, ys = pmf.Render()
-    low, high = min(xs), max(xs)
-
-    width = options.pop('width', None)
-    if width is None:
-        try:
-            width = np.diff(xs).min()
-        except TypeError:
-            warnings.warn("Pmf: Can't compute bar width automatically."
-                          "Check for non-numeric types in Pmf."
-                          "Or try providing width option.")
-    points = []
-
-    lastx = np.nan
-    lasty = 0
-    for x, y in zip(xs, ys):
-        if (x - lastx) > 1e-5:
-            points.append((lastx, 0))
-            points.append((x, 0))
-
-        points.append((x, lasty))
-        points.append((x, y))
-        points.append((x+width, y))
-
-        lastx = x + width
-        lasty = y
-    points.append((lastx, 0))
-    pxs, pys = zip(*points)
-
-    align = options.pop('align', 'center')
-    if align == 'center':
-        pxs = np.array(pxs) - width/2.0
-    if align == 'right':
-        pxs = np.array(pxs) - width
-
-    options = _Underride(options, label=pmf.label)
-    Plot(pxs, pys, **options)
-
-dfA_hist = dfA.hist(column='Temperature', histtype= 'step',  bins=50)
-
-Pmf(dfA_hist)
-plt.show()
-''' 
 # %%
