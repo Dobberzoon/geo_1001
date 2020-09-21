@@ -37,3 +37,5 @@ dfs_WBGT.xlsx
 dfs_WBGT_P.xlsx
 dfs_WBGT_S.xlsx
 dfs_windspeed.xlsx
+'quit()'
+'quit().pub'
