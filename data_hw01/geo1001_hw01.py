@@ -10,7 +10,21 @@ import matplotlib.patches as mpatches
 import plotly.express as px
 import seaborn as sns
 from scipy import stats
+from scipy.stats import sem, t, ttest_ind
+import numpy as np
+import scipy.stats
+from scipy import mean
 
+
+#Function for A4
+def confidence_interval_95(data):
+    confidence=0.95
+    n = len(data)
+    m = mean(data)
+    std_err = sem(data)
+    h = std_err * t.ppf((1 + confidence) / 2, n - 1)
+    #print('The 95 % confidence interval is: ')
+    return m-h, m+h
 
 #Dataframes of all variables from 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 dfA = pd.read_excel('HEAT - A_final.xls', skiprows=[0,1,2,4])
@@ -19,7 +33,6 @@ dfC = pd.read_excel('HEAT - C_final.xls', skiprows=[0,1,2,4])
 dfD = pd.read_excel('HEAT - D_final.xls', skiprows=[0,1,2,4])
 dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
-
 
 #Means, of each variable in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 df_mean_concat = pd.concat([dfA.apply(np.mean), 
@@ -37,9 +50,7 @@ dfB_mean = dfB.mean()
 dfC_mean = dfC.mean()
 dfD_mean = dfD.mean()
 dfE_mean = dfE.mean()
-df_mean_concat = pd.concat(
-                        [dfA_mean, dfB_mean, dfC_mean, dfD_mean, dfE_mean], 
-                        axis=1, ignore_index=True)
+df_mean_concat = pd.concat([dfA_mean, dfB_mean, dfC_mean, dfD_mean, dfE_mean], axis=1, ignore_index=True)
 #print(df_mean_concat)
 
 #Std.dev for all variables in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
@@ -51,7 +62,6 @@ dfE_std = dfE.std()
 df_std_concat = pd.concat(
                         [dfA_std, dfB_std, dfC_std, dfD_std, dfE_std], 
                         axis=1, ignore_index=True)
-#df_std_concat.columns = ['Std.dev']
 #print(df_std_concat)
 
 #Variance for all variables in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
@@ -166,7 +176,6 @@ plt.show()
 
 #CDF Temperature values
 plt.hist(dfs['Temperature'], bins=50, histtype= 'step', edgecolor='k', density=True, cumulative=True)
-dfs['Temperature']
 plt.plot()
 plt.ylabel('Cumulative Density')
 plt.xlabel('Temp in C')
@@ -190,7 +199,6 @@ plt.show()
 #Correlation matrices Temperature Pearson and Spearman
 dfs_Temp = pd.concat([dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
 dfs_Temp_P = dfs_Temp.corr(method='pearson')
-print(dfs_Temp_P)
 #dfs_Temp_P.to_excel('dfs_Temp_P.xlsx')
 dfs_Temp_S = dfs_Temp.corr(method='spearman')
 #dfs_Temp_S.to_excel('dfs_Temp_S.xlsx')
@@ -233,8 +241,8 @@ dfs_all_P = pd.DataFrame(data=zip(x,y,z),                   #Plotting into one s
 # Jupyter Notebook launch is advised for this plot
 # Type #%% to activate code as Jupyter Notebook cell (above imports) 
 # see below for alternative.
-fig = px.scatter(dfs_all_P, title="Pearson's rank Coefficient")
-fig.show()                      #You can save the file as png from this pop-up
+#fig = px.scatter(dfs_all_P, title="Pearson's rank Coefficient")
+#fig.show()                      #You can save the file as png from this pop-up
 
 #If plotly's px.scatter did not load for you
 # or you don't want to use #%% / Jupyter Notebook extension
@@ -267,8 +275,8 @@ dfs_all_S = pd.DataFrame(data=zip(x,y,z),                  #Plotting into one sc
 # Jupyter Notebook launch is advised for this plot
 # Type #%% to activate code as Jupyter Notebook cell (above imports) 
 # see below for alternative.
-fig = px.scatter(dfs_all_P, title="Spearmann's rank Coefficient")
-fig.show()                       #You can save the file as png from this pop-up
+#fig = px.scatter(dfs_all_P, title="Spearmann's rank Coefficient")
+#fig.show()                       #You can save the file as png from this pop-up
 
 #If plotly's px.scatter did not load for you
 # or you don't want to use #%% / Jupyter Notebook extension
@@ -276,4 +284,98 @@ fig.show()                       #You can save the file as png from this pop-up
 #plt.figure()
 #sns.scatterplot(data=dfs_all_S)
 
+#CDF Temperature values with corresponding confidence interval
+plt.figure()
+plt.hist(dfs['Temperature'], bins=50, histtype= 'step', edgecolor='k', density=True, cumulative=True)
+plt.plot()
+plt.ylabel('Cumulative Density')
+plt.xlabel('Temp in C')
+plt.title('CDF Temperatures Sensors A - E')
+#plt.savefig('CDF_Temp2.png')
+plt.show()
+#Print 95% confidence intervals for all sensors 
+#Temperature 
+#confidence_interval_95(dfs['Temperature']).to_excel('95_Temp.xlsx')
+print(confidence_interval_95(dfs['Temperature']))
+
+
+#CDF Wind Speed values
+plt.figure()
+plt.hist(dfs['Wind Speed'], bins=50, histtype= 'step', edgecolor='k', density=True, cumulative=True)
+plt.plot()
+plt.ylabel('Cumulative Density')
+plt.xlabel('Windspeed in m/s')
+plt.title('CDF Windspeed Sensors A - E')
+#plt.savefig('CDF_Windspeed.png')
+plt.show()
+#Print 95% confidence intervals for all sensors 
+#Wind Speed values
+
+#Computing all the confidence 95% intervals for all sensors 
+#Values Temperature and Wind Speed
+df_CI = dfs.filter(['Temperature', 'Wind Speed']) 
+#df_CI.apply(lambda x: confidence_interval_95(df_CI), axis=1).to_csv('95_CI_Temp_WS.csv')
+#df_CI.apply(lambda x: confidence_interval_95(df_CI), axis=1).to_excel('95_CI_Temp_WS.excel')
+
+
+
+
+##A4 hypothesis tests input between two sensors
+#i.e. A = test1 B = test2
+
+
+def h_test(test1,test2):
+    t, p = ttest_ind(test1,test2)
+    return(p)
+
+
+df_h_test = pd.DataFrame(index=['Temperature', 'Wind Speed'])
+
+
+df_h_test['E-D'] = h_test(dfE['Temperature'],dfD['Wind Speed'])
+df_h_test['D-C'] = h_test(dfD['Temperature'],dfC['Wind Speed'])
+df_h_test['C-B'] = h_test(dfC['Temperature'],dfB['Wind Speed'])
+df_h_test['B-A'] = h_test(dfB['Temperature'],dfA['Wind Speed'])
+df_h_test = df_h_test.T
+df_h_test.to_csv('h_test_all.csv')
+df_h_test
+
+
+
 #%%
+'''
+df_h_test['D-C'] = h_test(  DFH[['Temp','WS']][DFH.sensor=='D']  ,  DFH[['Temp','WS']][DFH.sensor=='C']  )
+df_h_test['C-B'] = h_test(  DFH[['Temp','WS']][DFH.sensor=='C']  ,  DFH[['Temp','WS']][DFH.sensor=='B']  )
+df_h_test['B-A'] = h_test(  DFH[['Temp','WS']][DFH.sensor=='B']  ,  DFH[['Temp','WS']][DFH.sensor=='A']  )
+df_h_test = df_h_test.T
+df_h_test.to_csv('h_test_all.csv')
+df_h_test
+
+
+def h_test(test1,test2):
+    t, p = ttest_ind(test1,test2)
+    return(p)
+
+print(h_test(dfE['Temperature'], dfD['Temperature']))
+
+
+
+df_h_test = pd.DataFrame(index=['Temperature', 'Wind Speed'])
+
+df_h_test['E-D'] = h_test(dfE['Temperature'],dfD['Temperature'])
+
+#%%
+
+hypo_df['E-D'] = hypothesis_tp(  a4[['Temp','WS']][a4.sensor=='E']  ,  a4[['Temp','WS']][a4.sensor=='D']  )
+hypo_df['D-C'] = hypothesis_tp(  a4[['Temp','WS']][a4.sensor=='D']  ,  a4[['Temp','WS']][a4.sensor=='C']  )
+hypo_df['C-B'] = hypothesis_tp(  a4[['Temp','WS']][a4.sensor=='C']  ,  a4[['Temp','WS']][a4.sensor=='B']  )
+hypo_df['B-A'] = hypothesis_tp(  a4[['Temp','WS']][a4.sensor=='B']  ,  a4[['Temp','WS']][a4.sensor=='A']  )
+hypo_df = hypo_df.T
+hypo_df.to_csv('./exports/hypo_p_val.csv')
+hypo_df
+
+
+'''
+
+
+# %%
