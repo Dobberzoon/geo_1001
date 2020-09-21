@@ -7,8 +7,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import plotly.express as px
 import seaborn as sns
 from scipy import stats
+
 
 #Dataframes of all variables from 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 dfA = pd.read_excel('HEAT - A_final.xls', skiprows=[0,1,2,4])
@@ -19,25 +21,115 @@ dfE = pd.read_excel('HEAT - E_final.xls', skiprows=[0,1,2,4])
 dfs = pd.concat([dfA, dfB, dfC, dfD, dfE])
 
 
-#Correlation matrices Temperature
-dfs_Temp = pd.concat([dfA['WBGT'], dfB['WBGT'], dfC['WBGT'], dfD['WBGT'], dfE['WBGT']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+#Correlation matrices Temperature Pearson and Spearman
+dfs_Temp = pd.concat([dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
 dfs_Temp_P = dfs_Temp.corr(method='pearson')
-#dfs_Temp_P.to_excel('dfs_WBGT.xlsx')
+#dfs_Temp_P.to_excel('dfs_Temp_P.xlsx')
 dfs_Temp_S = dfs_Temp.corr(method='spearman')
-#dfs_Temp_S.to_excel('dfs_WBGT_S.xlsx')
-plt.matshow(dfs_Temp.corr(method='pearson'))
+#dfs_Temp_S.to_excel('dfs_Temp_S.xlsx')
+
+#Correlation matrices WBGT Pearson and Spearman
+dfs_WBGT = pd.concat([dfA['WBGT'], dfB['WBGT'], dfC['WBGT'], dfD['WBGT'], dfE['WBGT']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_WBGT_P = dfs_WBGT.corr(method='pearson')
+#dfs_WBGT_P.to_excel('dfs_WBGT_P.xlsx')
+dfs_WBGT_S = dfs_WBGT.corr(method='spearman')
+#dfs_WBGT_S.to_excel('dfs_WBGT_S.xlsx')
+
+#Correlation matrices Crosswind Speed Pearson and Spearman
+dfs_CWS = pd.concat([dfA['Crosswind Speed'], dfB['Crosswind Speed'], dfC['Crosswind Speed'], dfD['Crosswind Speed'], dfE['Crosswind Speed']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_CWS_P = dfs_CWS.corr(method='pearson')
+#dfs_CWS_P.to_excel('dfs_CWS_P.xlsx')
+dfs_CWS_S = dfs_CWS.corr(method='spearman')
+#dfs_CWS_S.to_excel('dfs_CWS_S.xlsx')
+
+
+
+#Pearson Coefficient Scatterplot for all three variables: Temperature, WBGT & Crosswind Speed
+#Creating pairs AB, BD, AD, AE ,BC , BD, BE, CD, CE, DE
+x = dfs_Temp_P.values.tolist()[0][1:]
+x.extend(dfs_Temp_P.values.tolist()[1][2:])
+x.extend(dfs_Temp_P.values.tolist()[2][3:])
+x.extend(dfs_Temp_P.values.tolist()[3][4:])
+y = dfs_WBGT_P.values.tolist()[0][1:]
+y.extend(dfs_WBGT_P.values.tolist()[1][2:])
+y.extend(dfs_WBGT_P.values.tolist()[2][3:])
+y.extend(dfs_WBGT_P.values.tolist()[3][4:])
+z = dfs_CWS_P.values.tolist()[0][1:]
+z.extend(dfs_CWS_P.values.tolist()[1][2:])
+z.extend(dfs_CWS_P.values.tolist()[2][3:])
+z.extend(dfs_CWS_P.values.tolist()[3][4:])
+
+#Collecting all Pearson pairs into one dataframe
+dfs_all_P = pd.DataFrame(data=zip(x,y,z) , index=['AB', 'BD', 'AD', 'AE' ,'BC' ,'BD' ,'BE', 'CD', 'CE', 'DE'] , columns=['Temperature', 'WBGT','CrossWind Speed'])
+
+#Plotting into one scatterplot
+fig = px.scatter(dfs_all_P, title="Pearson's rank Coefficient")
+fig.show()
+fig.write_image("Pearson_Corr.png")
+
+
+#Spearman Coefficient Scatterplot for all three variables: Temperature, WBGT & Crosswind Speed
+#Creating pairs AB, BD, AD, AE ,BC , BD, BE, CD, CE, DE
+x = dfs_Temp_S.values.tolist()[0][1:]
+x.extend(dfs_Temp_S.values.tolist()[1][2:])
+x.extend(dfs_Temp_S.values.tolist()[2][3:])
+x.extend(dfs_Temp_S.values.tolist()[3][4:])
+y = dfs_WBGT_S.values.tolist()[0][1:]
+y.extend(dfs_WBGT_S.values.tolist()[1][2:])
+y.extend(dfs_WBGT_S.values.tolist()[2][3:])
+y.extend(dfs_WBGT_S.values.tolist()[3][4:])
+z = dfs_CWS_S.values.tolist()[0][1:]
+z.extend(dfs_CWS_S.values.tolist()[1][2:])
+z.extend(dfs_CWS_S.values.tolist()[2][3:])
+z.extend(dfs_CWS_S.values.tolist()[3][4:])
+
+#Collecting all Spearmann pairs into one dataframe
+dfs_all_S = pd.DataFrame(data=zip(x,y,z) , index=['AB', 'BD', 'AD', 'AE' ,'BC' ,'BD' ,'BE', 'CD', 'CE', 'DE'] , columns=['Temperature', 'WBGT','CrossWind Speed'])
+#Plotting into one scatterplot
+fig = px.scatter(dfs_all_P, title="Spearmann's rank Coefficient")
+fig.show()
+#plt.savefig("Spearmann_Corr.png")
+#fig.write_image("Spearmann_Corr.png")
+
+
+#%%
+
+'''
+#Pearson correlation coefficient matrices
+sns.pairplot(dfs_Temp_P)
+sns.pairplot(dfs_WBGT_P)
+sns.pairplot(dfs_CWS_P)
+
+#Spearman correlation coefficient matrices
+sns.pairplot(dfs_Temp_S)
+sns.pairplot(dfs_WBGT_S)
+sns.pairplot(dfs_CWS_S)
+
+
+#%%
+
+#Correlation matrices WBGT
+dfs_WBGT = pd.concat([dfA['WBGT'], dfB['WBGT'], dfC['WBGT'], dfD['WBGT'], dfE['WBGT']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+pd.plotting.scatter_matrix(dfs_WBGT, alpha=0.2)
 plt.show()
 #%%
 
-#Correlation matrices Temperature
-dfs_Temp = pd.concat([dfA['Crosswind Speed'], dfB['Crosswind Speed'], dfC['Crosswind Speed'], dfD['Crosswind Speed'], dfE['Crosswind Speed']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
-dfs_Temp_P = dfs_Temp.corr(method='pearson')
-#dfs_Temp_P.to_excel('dfs_CWS_P.xlsx')
-dfs_Temp_S = dfs_Temp.corr(method='spearman')
-#dfs_Temp_S.to_excel('dfs_CWS_S.xlsx')
+dfs_WBGT = pd.concat([dfA['WBGT'], dfB['WBGT'], dfC['WBGT'], dfD['WBGT'], dfE['WBGT']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+#dfs_WBGT = dfs_WBGT.rename_axis('ID').values
+#dfs_Temp_P = dfs_Temp.corr(method='pearson')
+#dfs_Temp_P.to_excel('dfs_WBGT.xlsx')
+#dfs_Temp_S = dfs_Temp.corr(method='spearman')
+#dfs_Temp_S.to_excel('dfs_WBGT_S.xlsx')
+#plt.matshow(dfs_Temp.corr(method='pearson'))
+
+pd.plotting.scatter_matrix(dfs_WBGT, alpha=0.2, )
+
+sbn.jointplot(x="A", y="B", data=df, alpha=0.2)
 
 
-'''
+
+
+
 #Means, of each variable in 'HEAT - A_final.xls' - 'HEAT - E_final.xls'
 df_mean_concat = pd.concat([dfA.apply(np.mean), dfB.apply(np.mean), dfC.apply(np.mean), dfD.apply(np.mean), dfE.apply(np.mean)], axis=1, ignore_index=True)
 df_mean_concat.to_csv('Means_ALL2.csv')
@@ -222,10 +314,26 @@ plt.legend()
 plt.savefig('PDF_KDE_WindSpeed_A-E.png')
 plt.show()
 
-#Correlation matrices Temperature
+##A3
+#Correlation matrices Temperature Pearson and Spearman
 dfs_Temp = pd.concat([dfA['Temperature'], dfB['Temperature'], dfC['Temperature'], dfD['Temperature'], dfE['Temperature']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
 dfs_Temp_P = dfs_Temp.corr(method='pearson')
 dfs_Temp_P.to_excel('dfs_Temp_P.xlsx')
 dfs_Temp_S = dfs_Temp.corr(method='spearman')
 dfs_Temp_S.to_excel('dfs_Temp_S.xlsx')
+
+#Correlation matrices WBGT Pearson and Spearman
+dfs_WBGT = pd.concat([dfA['WBGT'], dfB['WBGT'], dfC['WBGT'], dfD['WBGT'], dfE['WBGT']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_WBGT_P = dfs_WBGT.corr(method='pearson')
+dfs_WBGT_P.to_excel('dfs_WBGT_P.xlsx')
+dfs_WBGT_S = dfs_WBGT.corr(method='spearman')
+dfs_WBGT_S.to_excel('dfs_WBGT_S.xlsx')
+
+#Correlation matrices Crosswind Speed Pearson and Spearman
+dfs_CWS = pd.concat([dfA['Crosswind Speed'], dfB['Crosswind Speed'], dfC['Crosswind Speed'], dfD['Crosswind Speed'], dfE['Crosswind Speed']], axis=1, keys=['A', 'B', 'C', 'D', 'E'])
+dfs_CWS_P = dfs_CWS.corr(method='pearson')
+dfs_CWS_P.to_excel('dfs_CWS_P.xlsx')
+dfs_CWS_S = dfs_CWS.corr(method='spearman')
+dfs_CWS_S.to_excel('dfs_CWS_S.xlsx')
+
 '''
